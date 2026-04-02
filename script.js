@@ -96,4 +96,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }, i * 300);
         }
     }, 1000);
+    
+    if (window.visitCount >= 10) {
+        const walkingCat = document.createElement('div');
+        walkingCat.className = 'walking-cat';
+        walkingCat.textContent = '😺';
+        document.body.appendChild(walkingCat);
+    }
 });

@@ -237,6 +237,24 @@ h2 {
     animation: sparkle 0.6s ease-out forwards;
 }
 
+.walking-cat {
+    position: fixed;
+    bottom: 20px;
+    left: -60px;
+    font-size: 48px;
+    z-index: 2000;
+    animation: walk 15s linear infinite;
+}
+
+@keyframes walk {
+    0% {
+        left: -60px;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     body {
         margin: 20px auto;
