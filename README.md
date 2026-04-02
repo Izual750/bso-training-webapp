@@ -169,7 +169,11 @@ services:
 
 ```
 .
-├── main.php                      # Main application logic
+├── main.php                      # Application controller (business logic)
+├── helpers.php                   # Helper functions (utilities)
+├── templates/                    # HTML templates (presentation layer)
+│   ├── index.template.php        # Main page template
+│   └── error.template.php        # Error page template
 ├── styles.css                    # Stylesheet with ASCII cat
 ├── script.js                     # Client-side animations
 ├── Dockerfile                    # Docker image definition
@@ -181,6 +185,20 @@ services:
 ├── .gitignore                    # Git ignore rules
 └── README.md                     # This file
 ```
+
+### Architecture Pattern
+
+The application follows a **separation of concerns** pattern:
+
+- **`main.php`** - Controller: Handles Redis logic, data processing, and orchestration
+- **`helpers.php`** - Utilities: Reusable functions (IP detection, formatting, template rendering)
+- **`templates/*.php`** - Views: Pure HTML presentation with minimal PHP (only for output)
+
+This structure makes the code:
+- ✅ Easier to maintain and test
+- ✅ Clearer separation between logic and presentation
+- ✅ More reusable (helpers can be used anywhere)
+- ✅ Better organized for team collaboration
 
 ## Creating a Release
 

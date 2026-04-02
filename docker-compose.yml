@@ -24,8 +24,10 @@ services:
       REDIS_PASSWORD: devpassword
     volumes:
       - ./main.php:/var/www/html/main.php
+      - ./helpers.php:/var/www/html/helpers.php
       - ./styles.css:/var/www/html/styles.css
       - ./script.js:/var/www/html/script.js
+      - ./templates:/var/www/html/templates
     networks:
       - bso-network
     depends_on:
@@ -40,8 +42,10 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./main.php:/var/www/html/main.php:ro
+      - ./helpers.php:/var/www/html/helpers.php:ro
       - ./styles.css:/var/www/html/styles.css:ro
       - ./script.js:/var/www/html/script.js:ro
+      - ./templates:/var/www/html/templates:ro
     networks:
       - bso-network
     depends_on:
