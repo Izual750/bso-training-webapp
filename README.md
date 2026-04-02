@@ -50,7 +50,7 @@ cd bso-training-webapp
 docker-compose up -d
 ```
 
-3. Open http://localhost:8081 in your browser
+3. Open http://localhost:8082 in your browser
 
 4. Stop all services:
 ```bash
@@ -60,7 +60,8 @@ docker-compose down
 ### What's Included
 
 The `docker-compose.yml` file includes:
-- **webapp** - PHP built-in server (port 8081)
+- **nginx** - Reverse proxy (port 8082)
+- **webapp** - PHP built-in server (internal)
 - **redis** - Redis cache (port 6379, password: `devpassword`)
 
 All services are connected via a bridge network and include health checks.
