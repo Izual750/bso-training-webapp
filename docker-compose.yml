@@ -23,7 +23,7 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: devpassword
     volumes:
-      - ./main.php:/var/www/html/main.php
+      - ./index.php:/var/www/html/index.php
       - ./helpers.php:/var/www/html/helpers.php
       - ./styles.css:/var/www/html/styles.css
       - ./script.js:/var/www/html/script.js

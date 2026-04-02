@@ -7,7 +7,7 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 
 WORKDIR /var/www/html
 
-COPY main.php .
+COPY index.php .
 COPY helpers.php .
 COPY styles.css .
 COPY script.js .

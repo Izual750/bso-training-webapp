@@ -71,7 +71,7 @@ All services are connected via a bridge network and include health checks.
 ### Development Mode
 
 The compose file mounts your local files as volumes, so you can edit:
-- `main.php`
+- `index.php`
 - `styles.css`
 - `script.js`
 
@@ -114,7 +114,7 @@ export REDIS_PASSWORD=your-password  # optional
 
 3. Run with PHP built-in server:
 ```bash
-php -S localhost:8000 main.php
+php -S localhost:8000
 ```
 
 4. Open http://localhost:8000 in your browser
@@ -171,7 +171,7 @@ services:
 
 ```
 .
-├── main.php                      # Application controller (business logic)
+├── index.php                     # Application controller (business logic)
 ├── helpers.php                   # Helper functions (utilities)
 ├── templates/                    # HTML templates (presentation layer)
 │   ├── index.template.php        # Main page template
@@ -192,7 +192,7 @@ services:
 
 The application follows a **separation of concerns** pattern:
 
-- **`main.php`** - Controller: Handles Redis logic, data processing, and orchestration
+- **`index.php`** - Controller: Handles Redis logic, data processing, and orchestration
 - **`helpers.php`** - Utilities: Reusable functions (IP detection, formatting, template rendering)
 - **`templates/*.php`** - Views: Pure HTML presentation with minimal PHP (only for output)
 
