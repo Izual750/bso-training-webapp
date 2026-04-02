@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.3-cli-alpine
 
 RUN apk add --no-cache $PHPIZE_DEPS \
     && pecl install redis \
@@ -13,6 +13,6 @@ COPY styles.css .
 COPY script.js .
 COPY templates/ ./templates/
 
-EXPOSE 9000
+EXPOSE 8080
 
-CMD ["php-fpm"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]
