@@ -1,13 +1,15 @@
 # BSO Training WebApp
 
-A Redis-based IP hit counter web application built with PHP 8.3, featuring a modern UI with a cute ASCII cat mascot and real-time statistics tracking.
+A Redis-based IP hit counter web application built with PHP 8.3, featuring a modern UI with floating cat bubbles and real-time statistics tracking.
 
 ## Features
 
 - 🎯 IP-based visit tracking using Redis Sentinel
 - 📊 Global statistics (unique IPs, total hits)
 - 🖥️ System information display
-- 🐱 ASCII art cat mascot (slightly transparent)
+- 🐱 Floating cat bubbles (number matches visit count!)
+- 💥 Pop animation when clicking bubbles
+- 🎨 ASCII art cat background (slightly transparent)
 - 📱 Responsive design
 - ⚡ Modern UI with smooth animations
 - 🔄 Automatic Docker image builds on release
@@ -174,7 +176,7 @@ services:
 ├── templates/                    # HTML templates (presentation layer)
 │   ├── index.template.php        # Main page template
 │   └── error.template.php        # Error page template
-├── styles.css                    # Stylesheet with ASCII cat
+├── styles.css                    # Stylesheet with cat bubbles & ASCII cat
 ├── script.js                     # Client-side animations
 ├── Dockerfile                    # Docker image definition
 ├── docker-compose.yml            # Local development setup
@@ -240,7 +242,12 @@ The GitHub Actions workflow will automatically build and push the image to `ghcr
 ## UI Features
 
 - **Gradient background** with purple/blue theme
-- **ASCII cat mascot** centered behind content (15% opacity)
+- **Floating cat bubbles** - Random cats from cataas.com in circular bubbles
+  - Number of bubbles matches your visit count (1st visit = 1 cat, 5th visit = 5 cats!)
+  - Click to pop with sparkle animation
+  - New bubble spawns after popping
+  - Smooth floating animation
+- **ASCII art cat** centered behind content (15% opacity)
 - **Hover effects** on cards and stats
 - **Smooth animations** on page load
 - **Responsive design** for mobile devices
