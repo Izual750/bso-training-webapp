@@ -81,6 +81,7 @@ Changes will be reflected immediately (just refresh your browser).
 docker-compose logs -f
 
 # Specific service
+docker-compose logs -f nginx
 docker-compose logs -f webapp
 docker-compose logs -f redis
 ```
@@ -129,14 +130,21 @@ services:
 
   webapp:
     image: ghcr.io/izual750/bso-training-webapp:latest
-    ports:
-      - "8080:8080"
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: yourpassword
     depends_on:
       - redis
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - webapp
 ```
 
 ## Environment Variables
@@ -149,11 +157,12 @@ services:
 
 ## Architecture
 
+- **Reverse Proxy**: Nginx (HTTP proxy to PHP built-in server)
 - **Backend**: PHP 8.3 built-in server with Redis extension
 - **Cache/Storage**: Redis Sentinel
 - **Frontend**: Vanilla JavaScript with modern CSS
 - **Container**: Alpine-based Docker image (~50MB)
-- **No nginx required**: PHP built-in server handles both static files and PHP execution
+- **No FastCGI**: Nginx communicates with PHP via HTTP, PHP built-in server handles static files
 
 ## File Structure
 
@@ -168,6 +177,7 @@ services:
 ├── script.js                     # Client-side animations
 ├── Dockerfile                    # Docker image definition
 ├── docker-compose.yml            # Local development setup
+├── nginx.conf                    # Nginx reverse proxy config
 ├── .github/
 │   └── workflows/
 │       └── docker-publish.yml    # CI/CD workflow
