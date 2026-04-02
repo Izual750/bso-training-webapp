@@ -60,7 +60,7 @@ docker-compose down
 ### What's Included
 
 The `docker-compose.yml` file includes:
-- **nginx** - Reverse proxy (port 8082)
+- **nginx** - Reverse proxy (port 8080)
 - **webapp** - PHP built-in server (internal)
 - **redis** - Redis cache (port 6379, password: `devpassword`)
 
