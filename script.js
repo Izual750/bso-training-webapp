@@ -35,4 +35,49 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 200);
         });
     }
+    
+    function createCatBubble() {
+        const bubble = document.createElement('div');
+        bubble.className = 'cat-bubble';
+        
+        const img = document.createElement('img');
+        img.src = 'https://cataas.com/cat?' + Date.now();
+        img.alt = 'Random cat';
+        img.loading = 'lazy';
+        
+        bubble.appendChild(img);
+        
+        const maxX = window.innerWidth - 150;
+        const maxY = window.innerHeight - 150;
+        const randomX = Math.random() * maxX + 20;
+        const randomY = Math.random() * maxY + 20;
+        
+        bubble.style.left = randomX + 'px';
+        bubble.style.top = randomY + 'px';
+        
+        bubble.addEventListener('click', function(e) {
+            bubble.classList.add('popping');
+            
+            for (let i = 0; i < 8; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                const angle = (Math.PI * 2 * i) / 8;
+                const distance = 50;
+                sparkle.style.left = (Math.cos(angle) * distance) + 'px';
+                sparkle.style.top = (Math.sin(angle) * distance) + 'px';
+                bubble.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 600);
+            }
+            
+            setTimeout(() => {
+                bubble.remove();
+                setTimeout(createCatBubble, 2000);
+            }, 500);
+        });
+        
+        document.body.appendChild(bubble);
+    }
+    
+    setTimeout(createCatBubble, 1000);
 });
