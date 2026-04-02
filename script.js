@@ -36,12 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function createCatBubble() {
+    let activeBubbles = 0;
+    const maxBubbles = Math.min(window.visitCount || 1, 20);
+    
+    function createCatBubble(index = 0) {
         const bubble = document.createElement('div');
         bubble.className = 'cat-bubble';
         
         const img = document.createElement('img');
-        img.src = 'https://cataas.com/cat?' + Date.now();
+        img.src = 'https://cataas.com/cat?' + Date.now() + '-' + index;
         img.alt = 'Random cat';
         img.loading = 'lazy';
         
@@ -57,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         bubble.addEventListener('click', function(e) {
             bubble.classList.add('popping');
+            activeBubbles--;
             
             for (let i = 0; i < 8; i++) {
                 const sparkle = document.createElement('div');
@@ -72,12 +76,24 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(() => {
                 bubble.remove();
-                setTimeout(createCatBubble, 2000);
+                if (activeBubbles < maxBubbles) {
+                    setTimeout(() => {
+                        createCatBubble(Date.now());
+                        activeBubbles++;
+                    }, 2000);
+                }
             }, 500);
         });
         
         document.body.appendChild(bubble);
     }
     
-    setTimeout(createCatBubble, 1000);
+    setTimeout(() => {
+        for (let i = 0; i < maxBubbles; i++) {
+            setTimeout(() => {
+                createCatBubble(i);
+                activeBubbles++;
+            }, i * 300);
+        }
+    }, 1000);
 });

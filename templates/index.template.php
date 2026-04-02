@@ -84,6 +84,9 @@
         </div>
     </div>
     
+    <script>
+        window.visitCount = <?= $hitCount ?>;
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
