@@ -33,12 +33,66 @@ docker run -d \
   ghcr.io/izual750/bso-training-webapp:latest
 ```
 
-## Local Development
+## Local Development with Docker Compose
+
+The easiest way to run the application locally is using Docker Compose.
+
+### Quick Start
+
+1. Clone the repository:
+```bash
+git clone git@github.com:Izual750/bso-training-webapp.git
+cd bso-training-webapp
+```
+
+2. Start all services:
+```bash
+docker-compose up -d
+```
+
+3. Open http://localhost:8080 in your browser
+
+4. Stop all services:
+```bash
+docker-compose down
+```
+
+### What's Included
+
+The `docker-compose.yml` file includes:
+- **nginx** - Web server (port 8080)
+- **webapp** - PHP-FPM application
+- **redis** - Redis cache (port 6379, password: `devpassword`)
+
+All services are connected via a bridge network and include health checks.
+
+### Development Mode
+
+The compose file mounts your local files as volumes, so you can edit:
+- `main.php`
+- `styles.css`
+- `script.js`
+
+Changes will be reflected immediately (just refresh your browser).
+
+### View Logs
+
+```bash
+# All services
+docker-compose logs -f
+
+# Specific service
+docker-compose logs -f nginx
+docker-compose logs -f webapp
+docker-compose logs -f redis
+```
+
+## Alternative: Local Development (Without Docker)
 
 ### Prerequisites
 
 - PHP 8.3+
-- Redis server (with Sentinel support)
+- Redis server
 - PHP Redis extension
 
 ### Setup
@@ -51,7 +105,7 @@ cd bso-training-webapp
 
 2. Set environment variables:
 ```bash
-export REDIS_HOST=redis-sentinel
+export REDIS_HOST=localhost
 export REDIS_PORT=6379
 export REDIS_PASSWORD=your-password  # optional
 ```
@@ -63,7 +117,7 @@ php -S localhost:8000 main.php
 
 4. Open http://localhost:8000 in your browser
 
-## Docker Compose Example
+## Production Docker Compose Example
 
 ```yaml
 version: '3.8'
@@ -119,9 +173,12 @@ services:
 ├── styles.css                    # Stylesheet with ASCII cat
 ├── script.js                     # Client-side animations
 ├── Dockerfile                    # Docker image definition
+├── docker-compose.yml            # Local development setup
+├── nginx.conf                    # Nginx configuration
 ├── .github/
 │   └── workflows/
 │       └── docker-publish.yml    # CI/CD workflow
+├── .gitignore                    # Git ignore rules
 └── README.md                     # This file
 ```
 
