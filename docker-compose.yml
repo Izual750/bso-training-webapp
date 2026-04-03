@@ -37,14 +37,22 @@ services:
     container_name: bso-sentinel-1
     ports:
       - "26379:26379"
-    command: >
-      sh -c "echo 'port 26379
-      sentinel monitor mymaster redis-master 6379 2
-      sentinel auth-pass mymaster devpassword
-      sentinel down-after-milliseconds mymaster 5000
-      sentinel parallel-syncs mymaster 1
-      sentinel failover-timeout mymaster 10000' > /tmp/sentinel.conf &&
-      redis-sentinel /tmp/sentinel.conf"
+    command:
+      - sh
+      - -c
+      - |
+        until nc -z redis-master 6379; do sleep 1; done
+        cat > /tmp/sentinel.conf <<EOF
+        port 26379
+        sentinel resolve-hostnames yes
+        sentinel announce-hostnames yes
+        sentinel monitor mymaster redis-master 6379 2
+        sentinel auth-pass mymaster devpassword
+        sentinel down-after-milliseconds mymaster 5000
+        sentinel parallel-syncs mymaster 1
+        sentinel failover-timeout mymaster 10000
+        EOF
+        redis-sentinel /tmp/sentinel.conf
     networks:
       - bso-network
     depends_on:
@@ -56,14 +64,22 @@ services:
     container_name: bso-sentinel-2
     ports:
       - "26380:26379"
-    command: >
-      sh -c "echo 'port 26379
-      sentinel monitor mymaster redis-master 6379 2
-      sentinel auth-pass mymaster devpassword
-      sentinel down-after-milliseconds mymaster 5000
-      sentinel parallel-syncs mymaster 1
-      sentinel failover-timeout mymaster 10000' > /tmp/sentinel.conf &&
-      redis-sentinel /tmp/sentinel.conf"
+    command:
+      - sh
+      - -c
+      - |
+        until nc -z redis-master 6379; do sleep 1; done
+        cat > /tmp/sentinel.conf <<EOF
+        port 26379
+        sentinel resolve-hostnames yes
+        sentinel announce-hostnames yes
+        sentinel monitor mymaster redis-master 6379 2
+        sentinel auth-pass mymaster devpassword
+        sentinel down-after-milliseconds mymaster 5000
+        sentinel parallel-syncs mymaster 1
+        sentinel failover-timeout mymaster 10000
+        EOF
+        redis-sentinel /tmp/sentinel.conf
     networks:
       - bso-network
     depends_on:
@@ -75,14 +91,22 @@ services:
     container_name: bso-sentinel-3
     ports:
       - "26381:26379"
-    command: >
-      sh -c "echo 'port 26379
-      sentinel monitor mymaster redis-master 6379 2
-      sentinel auth-pass mymaster devpassword
-      sentinel down-after-milliseconds mymaster 5000
-      sentinel parallel-syncs mymaster 1
-      sentinel failover-timeout mymaster 10000' > /tmp/sentinel.conf &&
-      redis-sentinel /tmp/sentinel.conf"
+    command:
+      - sh
+      - -c
+      - |
+        until nc -z redis-master 6379; do sleep 1; done
+        cat > /tmp/sentinel.conf <<EOF
+        port 26379
+        sentinel resolve-hostnames yes
+        sentinel announce-hostnames yes
+        sentinel monitor mymaster redis-master 6379 2
+        sentinel auth-pass mymaster devpassword
+        sentinel down-after-milliseconds mymaster 5000
+        sentinel parallel-syncs mymaster 1
+        sentinel failover-timeout mymaster 10000
+        EOF
+        redis-sentinel /tmp/sentinel.conf
     networks:
       - bso-network
     depends_on:
