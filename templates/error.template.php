@@ -10,8 +10,7 @@
         <div class="error">
             <h1>❌ Redis Connection Error</h1>
             <p><strong>Error:</strong> <?= escapeHtml($errorMessage) ?></p>
-            <p><strong>Redis Host:</strong> <?= escapeHtml($redisHost) ?></p>
-            <p><strong>Redis Port:</strong> <?= escapeHtml((string)$redisPort) ?></p>
+            <p><strong>Redis Connection:</strong> <?= escapeHtml($connectionInfo) ?></p>
         </div>
         <div class="info">
             <strong>System Info:</strong><br>

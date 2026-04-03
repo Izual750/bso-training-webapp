@@ -1,26 +1,100 @@
 version: '3.8'
 
 services:
-  redis:
+  redis-master:
     image: redis:alpine
-    container_name: bso-redis
+    container_name: bso-redis-master
     ports:
       - "6379:6379"
-    command: redis-server --requirepass devpassword
+    command: redis-server --requirepass devpassword --masterauth devpassword
     networks:
       - bso-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "devpassword", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
+
+  redis-replica:
+    image: redis:alpine
+    container_name: bso-redis-replica
+    ports:
+      - "6380:6379"
+    command: redis-server --requirepass devpassword --masterauth devpassword --replicaof redis-master 6379
+    networks:
+      - bso-network
+    depends_on:
+      redis-master:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "devpassword", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  sentinel-1:
+    image: redis:alpine
+    container_name: bso-sentinel-1
+    ports:
+      - "26379:26379"
+    command: >
+      sh -c "echo 'port 26379
+      sentinel monitor mymaster redis-master 6379 2
+      sentinel auth-pass mymaster devpassword
+      sentinel down-after-milliseconds mymaster 5000
+      sentinel parallel-syncs mymaster 1
+      sentinel failover-timeout mymaster 10000' > /tmp/sentinel.conf &&
+      redis-sentinel /tmp/sentinel.conf"
+    networks:
+      - bso-network
+    depends_on:
+      redis-master:
+        condition: service_healthy
+
+  sentinel-2:
+    image: redis:alpine
+    container_name: bso-sentinel-2
+    ports:
+      - "26380:26379"
+    command: >
+      sh -c "echo 'port 26379
+      sentinel monitor mymaster redis-master 6379 2
+      sentinel auth-pass mymaster devpassword
+      sentinel down-after-milliseconds mymaster 5000
+      sentinel parallel-syncs mymaster 1
+      sentinel failover-timeout mymaster 10000' > /tmp/sentinel.conf &&
+      redis-sentinel /tmp/sentinel.conf"
+    networks:
+      - bso-network
+    depends_on:
+      redis-master:
+        condition: service_healthy
+
+  sentinel-3:
+    image: redis:alpine
+    container_name: bso-sentinel-3
+    ports:
+      - "26381:26379"
+    command: >
+      sh -c "echo 'port 26379
+      sentinel monitor mymaster redis-master 6379 2
+      sentinel auth-pass mymaster devpassword
+      sentinel down-after-milliseconds mymaster 5000
+      sentinel parallel-syncs mymaster 1
+      sentinel failover-timeout mymaster 10000' > /tmp/sentinel.conf &&
+      redis-sentinel /tmp/sentinel.conf"
+    networks:
+      - bso-network
+    depends_on:
+      redis-master:
+        condition: service_healthy
 
   webapp:
     build: .
     container_name: bso-webapp
     environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      REDIS_SENTINEL_HOSTS: sentinel-1:26379,sentinel-2:26379,sentinel-3:26379
+      REDIS_MASTER_NAME: mymaster
       REDIS_PASSWORD: devpassword
     volumes:
       - ./index.php:/var/www/html/index.php
@@ -31,8 +105,12 @@ services:
     networks:
       - bso-network
     depends_on:
-      redis:
-        condition: service_healthy
+      sentinel-1:
+        condition: service_started
+      sentinel-2:
+        condition: service_started
+      sentinel-3:
+        condition: service_started
 
   nginx:
     image: nginx:alpine

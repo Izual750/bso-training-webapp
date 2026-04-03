@@ -11,20 +11,30 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/helpers.php';
 
-$redisHost = getenv('REDIS_HOST') ?: 'redis-sentinel';
-$redisPort = (int)(getenv('REDIS_PORT') ?: 6379);
+$sentinelHostsEnv = getenv('REDIS_SENTINEL_HOSTS') ?: '';
+$masterName = getenv('REDIS_MASTER_NAME') ?: 'mymaster';
 $redisPassword = getenv('REDIS_PASSWORD') ?: null;
 
 try {
-    $redis = new Redis();
-    $connected = $redis->connect($redisHost, $redisPort);
-    
-    if (!$connected) {
-        throw new Exception("Failed to connect to Redis at {$redisHost}:{$redisPort}");
-    }
-    
-    if ($redisPassword) {
-        $redis->auth($redisPassword);
+    if ($sentinelHostsEnv) {
+        $sentinelHosts = array_map('trim', explode(',', $sentinelHostsEnv));
+        $redis = connectToRedisSentinel($sentinelHosts, $masterName, $redisPassword);
+        $connectionInfo = "Sentinel ({$masterName})";
+    } else {
+        $redisHost = getenv('REDIS_HOST') ?: 'redis';
+        $redisPort = (int)(getenv('REDIS_PORT') ?: 6379);
+        
+        $redis = new Redis();
+        $connected = $redis->connect($redisHost, $redisPort);
+        
+        if (!$connected) {
+            throw new Exception("Failed to connect to Redis at {$redisHost}:{$redisPort}");
+        }
+        
+        if ($redisPassword) {
+            $redis->auth($redisPassword);
+        }
+        $connectionInfo = "{$redisHost}:{$redisPort}";
     }
     
     $clientIP = getClientIP();
@@ -58,8 +68,7 @@ try {
         'hostname' => $hostname,
         'serverSoftware' => $serverSoftware,
         'currentTime' => $currentTime,
-        'redisHost' => $redisHost,
-        'redisPort' => $redisPort,
+        'connectionInfo' => $connectionInfo,
     ]);
     
 } catch (Exception $e) {
@@ -68,7 +77,6 @@ try {
     
     renderTemplate(__DIR__ . '/templates/error.template.php', [
         'errorMessage' => $e->getMessage(),
-        'redisHost' => $redisHost,
-        'redisPort' => $redisPort,
+        'connectionInfo' => $connectionInfo ?? 'Unknown',
     ]);
 }

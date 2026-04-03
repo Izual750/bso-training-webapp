@@ -69,13 +69,8 @@
             </div>
             
             <div class="info-card">
-                <strong>🔴 Redis Server</strong>
-                <?= escapeHtml($redisHost . ':' . $redisPort) ?>
-            </div>
-            
-            <div class="info-card">
-                <strong>💾 Redis Connection</strong>
-                <span style="color: #28a745;">✓ Connected</span>
+                <strong>🔴 Redis Connection</strong>
+                <?= escapeHtml($connectionInfo) ?> <span style="color: #28a745;">✓</span>
             </div>
         </div>
         
